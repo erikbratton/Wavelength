@@ -1,0 +1,219 @@
+
+body {
+    background-color: rgb(1, 7, 18);
+    color: white;
+    font-family: 'Caprasimo', serif;
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.login-section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h2 {
+    font-weight: 300;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1rem;
+    font-style: italic;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #bbb;
+}
+
+button, .btn {
+    font-family: 'Caprasimo', serif;
+    border-radius: 2rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-primary {
+    background-color: #1db954;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #17a44a;
+    }
+
+.back-btn {
+    background-color: #1db954;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    transition: background-color 0.3s ease;
+}
+
+    .back-btn:hover {
+        background-color: #17a44a;
+    }
+
+
+.topTracksGrid, .recGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 4rem;
+    margin-top: 2rem;
+}
+
+
+.track-card {
+    display: flex;
+    align-items: flex-start;
+    background: #111;
+    padding: 1rem;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+    .track-card:hover {
+        transform: translateY(-4px);
+    }
+
+
+.album-art {
+    width: 5rem;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.track-name {
+    font-size: 1.2rem;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.track-info:hover {
+    color: aquamarine;
+    cursor: pointer;
+}
+
+
+.track-artists {
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+
+.audio-player {
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+
+.spotify-link {
+    color: #1db954;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .spotify-link:hover {
+        text-decoration: underline;
+    }
+
+/* FOR MOBILE */
+
+@media (max-width: 768px) {
+    .topTracksGrid, .recGrid {
+        grid-template-columns: 1fr; 
+        gap: 1.5rem; 
+    }
+
+    .track-card {
+        flex-direction: row;
+        padding: 0.8rem;
+    }
+
+    .album-art {
+        width: 4rem;
+        margin-right: 0.8rem;
+    }
+
+    .track-name {
+        font-size: 1.1rem;
+    }
+
+    .track-artists {
+        font-size: 0.8rem;
+    }
+
+    .back-btn, .btn-primary {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page {
+        padding: 1rem;
+    }
+
+    .album-art {
+        width: 3.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .track-name {
+        font-size: 1rem;
+    }
+
+    .track-artists {
+        font-size: 0.75rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+}

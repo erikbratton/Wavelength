@@ -1,0 +1,160 @@
+﻿@page "/"
+@using OpenAI.Chat
+@using SpotifyAPI.Web
+@using System.Text.Json
+@inject NavigationManager Navigation
+@inject HttpClient client
+@inject IJSRuntime JS
+
+<link rel="stylesheet" href="css/HomePage.css">
+
+<div class="page">
+    @if (loading)
+    {
+        <h1>Loading...</h1>
+    }
+    else
+    {
+        @if (!isAuthorized)
+        {
+            <div class="login-section">
+                <h2>Welcome to Wavelength</h2>
+                <p>Log in with Spotify to see your top tracks and get personalized recommendations.</p>
+                <button class="btn btn-primary" @onclick="LoginToSpotify">
+                    Login with Spotify
+                </button>
+            </div>
+        }
+        else
+        {
+            @if (!gettingRec)
+            {
+                @if (tracks.Items != null)
+                {
+                    <h1>Your Top Tracks</h1>
+                    <p class="subtitle">Click on a track name to get a recommendation like it!</p>
+
+                    <div class="topTracksGrid">
+                        @foreach (var track in topTracks)
+                        {
+                            <div class="track-card">
+                                <img src="@track.Album.Images[0].Url" alt="Album Art" class="album-art" />
+                                <div class="track-info">
+                                    <p @onclick="() => HandleTrackClick(track.Name, String.Join(',', track.Artists))"
+                                       class="track-name topTrack">@track.Name</p>
+                                    <p class="track-artists">
+                                        @string.Join(", ", track.Artists.Select(a => a.Name))
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <h2>No tracks to display</h2>
+                }
+            }
+            else
+            {
+                <h1>Recommended Songs</h1>
+                <button class="back-btn" @onclick="BackToTopTracks">⬅ Back to Top Tracks</button>
+
+                <div class="recGrid">
+                    @foreach (var trackRec in trackRecs)
+                    {
+                        <div class="track-card">
+                            <img src="@trackRec.Album.Images[0].Url" alt="Album Art" class="album-art" />
+                            <div class="track-info">
+                                <p @onclick="() => HandleTrackClick(trackRec.Name, String.Join(',', trackRec.Artists))"
+                                   class="track-name topTrack">@trackRec.Name</p>
+                                <p class="track-artists">@string.Join(", ", trackRec.Artists.Select(a => a.Name))</p>
+
+                                @if (!string.IsNullOrEmpty(trackRec.PreviewUrl))
+                                {
+                                    <audio controls class="audio-player">
+                                        <source src="@trackRec.PreviewUrl" type="audio/mpeg" />
+                                    </audio>
+                                }
+                                else
+                                {
+                                    <p>
+                                        <a href="@trackRec.ExternalUrls["spotify"]" target="_blank" class="spotify-link">
+                                            Listen on Spotify
+                                        </a>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>
+
+@code {
+    private bool isAuthorized = false;
+    private bool loading = true;
+    private UsersTopTracksResponse? tracks;
+    private List<FullTrack>? topTracks;
+    private bool gettingRec = false;
+    private List<FullTrack>? trackRecs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isAuthorized = await JS.InvokeAsync<bool>("checkAuth");
+            if (isAuthorized)
+            {
+                await JS.InvokeVoidAsync("import", "./js/homePage.js");
+
+                var json = await JS.InvokeAsync<JsonElement>("homePage.home");
+                var rawJson = json.GetRawText();
+                tracks = JsonSerializer.Deserialize<UsersTopTracksResponse>(rawJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                topTracks = tracks.Items.Take(10).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Auth check failed: {ex.Message}");
+            isAuthorized = false;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private void LoginToSpotify()
+    {
+        Navigation.NavigateTo("https://b095221229a4.ngrok-free.app/Login", forceLoad: true);
+    }
+
+    private async void HandleTrackClick(string track, string artists)
+    {
+        loading = true;
+        StateHasChanged();
+
+        var json = await JS.InvokeAsync<JsonElement>("homePage.getSongRec", track, artists);
+        var rawJson = json.GetRawText();
+        trackRecs = JsonSerializer.Deserialize<List<FullTrack>>(rawJson, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        gettingRec = true;
+        loading = false;
+        StateHasChanged();
+    }
+
+    private void BackToTopTracks()
+    {
+        gettingRec = false;
+        StateHasChanged();
+    }
+}
