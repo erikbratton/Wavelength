@@ -1,9 +1,0 @@
-wwwroot\css\app.css
-wwwroot\icon-192.png
-wwwroot\index.html
-wwwroot\js\homePage.js
-wwwroot\css\HomePage.css
-C:\Users\erikb\source\repos\erikbratton\WaveLengthFrontEnd\wwwroot\css\app.css
-C:\Users\erikb\source\repos\erikbratton\WaveLengthFrontEnd\wwwroot\index.html
-C:\Users\erikb\source\repos\erikbratton\WaveLengthFrontEnd\wwwroot\js\homePage.js
-C:\Users\erikb\source\repos\erikbratton\WaveLengthFrontEnd\wwwroot\css\HomePage.css
